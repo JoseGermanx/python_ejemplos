@@ -1,6 +1,5 @@
 from collections import Counter
 
-# Datos iniciales
 libros = {
     "B001": {
         "titulo": "1984",
@@ -22,48 +21,78 @@ libros = {
     }
 }
 
-# Mostrar todos los libros
-print("Libros disponibles:")
-for codigo, info in libros.items():
-    print(codigo, "-", info["titulo"], "| Stock:", info["stock"])
+while True:
+    print("\n--- MENÚ BIBLIOTECA ---")
+    print("1. Mostrar todos los libros")
+    print("2. Buscar libros por género")
+    print("3. Estadísticas por género")
+    print("4. Mostrar libros con bajo stock")
+    print("5. Agregar nuevo libro")
+    print("6. Actualizar stock")
+    print("7. Eliminar libro")
+    print("0. Salir")
 
-# Buscar por género
-genero_buscado = input("\nIngrese un género: ")
-generos = {info["genero"] for info in libros.values()}
+    opcion = input("Seleccione una opción: ")
 
-if genero_buscado in generos:
-    print("Libros del género", genero_buscado)
-    for info in libros.values():
-        if info["genero"] == genero_buscado:
-            print("-", info["titulo"])
-else:
-    print("No hay libros de ese género")
+    if opcion == "1":
+        for codigo, info in libros.items():
+            print(codigo, "-", info["titulo"], "| Stock:", info["stock"])
 
-# Contar libros por género
-contador_generos = Counter(info["genero"] for info in libros.values())
-print("\nCantidad de libros por género:", contador_generos)
+    elif opcion == "2":
+        genero = input("Ingrese género: ")
+        encontrados = False
+        for info in libros.values():
+            if info["genero"] == genero:
+                print("-", info["titulo"])
+                encontrados = True
+        if not encontrados:
+            print("No hay libros de ese género")
 
-# Libros con bajo stock
-print("\nLibros con stock menor a 3:")
-for info in libros.values():
-    if info["stock"] < 3:
-        print("-", info["titulo"])
+    elif opcion == "3":
+        contador = Counter(info["genero"] for info in libros.values())
+        print("Libros por género:", contador)
 
-# Agregar un libro nuevo
-libros["B004"] = {
-    "titulo": "Dune",
-    "autor": ("Frank Herbert", 1920),
-    "genero": "Ciencia ficción",
-    "stock": 4
-}
+    elif opcion == "4":
+        for info in libros.values():
+            if info["stock"] < 3:
+                print("-", info["titulo"])
 
-# Actualizar stock
-libros["B002"]["stock"] += 3
+    elif opcion == "5":
+        codigo = input("Código: ")
+        titulo = input("Título: ")
+        autor = input("Autor: ")
+        anio = int(input("Año nacimiento autor: "))
+        genero = input("Género: ")
+        stock = int(input("Stock: "))
 
-# Bonus: eliminar un libro
-codigo_eliminar = input("\nCódigo a eliminar: ")
-if codigo_eliminar in libros:
-    del libros[codigo_eliminar]
-    print("Libro eliminado")
-else:
-    print("Código no encontrado")
+        libros[codigo] = {
+            "titulo": titulo,
+            "autor": (autor, anio),
+            "genero": genero,
+            "stock": stock
+        }
+        print("Libro agregado")
+
+    elif opcion == "6":
+        codigo = input("Código del libro: ")
+        if codigo in libros:
+            cantidad = int(input("Cantidad a sumar: "))
+            libros[codigo]["stock"] += cantidad
+            print("Stock actualizado")
+        else:
+            print("Libro no encontrado")
+
+    elif opcion == "7":
+        codigo = input("Código a eliminar: ")
+        if codigo in libros:
+            del libros[codigo]
+            print("Libro eliminado")
+        else:
+            print("Código no válido")
+
+    elif opcion == "0":
+        print("Saliendo del sistema...")
+        break
+
+    else:
+        print("Opción inválida")
